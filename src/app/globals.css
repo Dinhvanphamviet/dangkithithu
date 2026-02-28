@@ -129,3 +129,23 @@ html {
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes shimmerSlow {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+@keyframes pulseSoft {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 20px -4px rgba(74,144,217,0.5);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 12px 35px rgba(74,144,217,0.6);
+  }
+}
