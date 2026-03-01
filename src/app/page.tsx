@@ -135,7 +135,7 @@ export default function Home() {
       <main>
         {/* ── Hero Banner ── */}
         <section
-          className="relative w-full min-h-screen flex flex-col items-center justify-start pt-[5vh] sm:pt-[7vh] overflow-hidden"
+          className="relative w-full h-[100svh] flex flex-col items-center overflow-hidden"
           style={{
             background:
               "linear-gradient(180deg, #F7FBFF 0%, #F0F7FC 40%, #E6F1FA 100%)",
@@ -145,77 +145,73 @@ export default function Home() {
           <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-blue-200/30 blur-[100px] pointer-events-none" />
           <div className="absolute top-[20%] left-[-10%] w-[400px] h-[400px] rounded-full bg-sky-200/30 blur-[100px] pointer-events-none" />
 
-          {/* Logo */}
-          <motion.div
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.1, duration: 0.5 }}
-            className="relative z-20 mb-6 sm:mb-10"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logofinal.png"
-              alt="Logo"
-              className="h-12 sm:h-16 w-auto object-contain"
-            />
-          </motion.div>
-
-          {/* Headline */}
-          <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
-            className="relative z-20 text-center flex flex-col items-center px-4 w-full max-w-4xl"
-          >
-            <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-wider text-[#2D6EB5] leading-[1.2] mb-4 sm:mb-6">
-              ĐĂNG KÍ THI THỬ
-              <br />
-              THPT MÔN TOÁN
-            </h1>
-
-            {/* CTA Button */}
-            <Button
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                e.preventDefault();
-                document
-                  .getElementById("registration-form")
-                  ?.scrollIntoView({ behavior: "smooth" });
-              }}
-              size="lg"
-              className="relative group rounded-full px-10 py-5 sm:px-14 sm:py-7
-  text-sm sm:text-lg font-bold uppercase tracking-wider
-  bg-[#4A90D9] hover:bg-[#3A7BC8] text-white
-  shadow-[0_4px_20px_-4px_rgba(74,144,217,0.5)]
-  transition-all duration-300
-  hover:scale-105
-  overflow-hidden
-  animate-[pulseSoft_3s_ease-in-out_infinite]"
+          {/* Wrapper để control layout */}
+          <div className="relative z-20 w-full max-w-4xl px-4 flex flex-col items-center text-center pt-[6vh] sm:pt-[7vh] h-full">
+            {/* Logo */}
+            <motion.div
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              className="mb-6 sm:mb-10"
             >
-              <span className="relative z-10">ĐĂNG KÍ NGAY</span>
-
-              {/* shimmer auto chạy chậm */}
-              <div
-                className="absolute inset-0 h-full w-full 
-  bg-gradient-to-r from-transparent via-white/20 to-transparent
-  -translate-x-full animate-[shimmerSlow_4s_linear_infinite]"
+              <img
+                src="/logofinal.png"
+                alt="Logo"
+                className="h-12 sm:h-16 w-auto object-contain"
               />
-            </Button>
-          </motion.div>
+            </motion.div>
 
-          {/* Iconedu Image */}
-          <motion.div
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.7, ease: "easeOut" }}
-            className="relative z-10 w-full max-w-4xl px-4 mt-auto"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/iconedu.png"
-              alt="Học sinh"
-              className="w-full h-auto object-contain max-h-[55vh]"
-            />
-          </motion.div>
+            {/* Headline + CTA */}
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
+              className="w-full flex flex-col items-center"
+            >
+              <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-wider text-[#2D6EB5] leading-[1.15] mb-5 sm:mb-6">
+                ĐĂNG KÍ THI THỬ
+                <br />
+                THPT MÔN TOÁN
+              </h1>
+
+              <Button
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.preventDefault();
+                  document
+                    .getElementById("registration-form")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                }}
+                size="lg"
+                className="relative group rounded-full px-10 py-5 sm:px-14 sm:py-7
+          text-sm sm:text-lg font-bold uppercase tracking-wider
+          bg-[#4A90D9] hover:bg-[#3A7BC8] text-white
+          shadow-[0_4px_20px_-4px_rgba(74,144,217,0.5)]
+          transition-all duration-300 hover:scale-105
+          overflow-hidden animate-[pulseSoft_3s_ease-in-out_infinite]"
+              >
+                <span className="relative z-10">ĐĂNG KÍ NGAY</span>
+                <div
+                  className="absolute inset-0 h-full w-full
+            bg-gradient-to-r from-transparent via-white/20 to-transparent
+            -translate-x-[120%] animate-[shimmerSlow_4s_linear_infinite]"
+                />
+              </Button>
+            </motion.div>
+
+            {/* Iconedu: mobile nằm ngay dưới CTA, desktop có thể dính đáy */}
+            <motion.div
+              initial={{ y: 28, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.35, duration: 0.6, ease: "easeOut" }}
+              className="w-full mt-10 md:mt-auto pb-6"
+            >
+              <img
+                src="/iconedu.png"
+                alt="Học sinh"
+                className="w-full h-auto object-contain max-h-[42vh] md:max-h-[55vh]"
+              />
+            </motion.div>
+          </div>
         </section>
 
         {/* ── Registration Form Section ── */}
