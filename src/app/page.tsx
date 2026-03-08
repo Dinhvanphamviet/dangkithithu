@@ -4,77 +4,35 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Controller } from "react-hook-form";
-import { IMaskInput } from "react-imask";
-import IMask from "imask";
-import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { toast } from "sonner";
 import {
-  BookOpen,
-  Clock,
-  BarChart3,
-  Lightbulb,
-  CalendarDays,
+  GraduationCap,
+  CircleCheckBig,
+  NotebookText,
+  SearchCheck,
+  BadgeCheck,
+  ArrowRight,
+  Users,
   Monitor,
-  Timer,
-  Loader2,
-  CheckCircle2,
-  ShieldCheck,
-  MapPin,
+  Clock,
+  CheckCircle,
 } from "lucide-react";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { vi } from "date-fns/locale";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
-import "./globals.css";
-
-/* ─── Zod Schema ─── */
 const schema = z.object({
   fullName: z.string().min(2, "Vui lòng nhập họ và tên"),
   phone: z
     .string()
     .min(9, "Số điện thoại không hợp lệ")
     .regex(/^[0-9+\-\s()]+$/, "Số điện thoại không hợp lệ"),
-  school: z.string().min(2, "Vui lòng nhập tên trường"),
-  // honeypot
+  email: z.string().email("Email không hợp lệ"),
   website: z.string().max(0, "Bot detected"),
 });
 
 type FormData = z.infer<typeof schema>;
 
-const examInfo = [
-  { icon: CalendarDays, label: "15 – 20 / 05" },
-  { icon: Monitor, label: "Thi online" },
-  { icon: Timer, label: "90 phút" },
-];
-
-/* ─── Animation variants ─── */
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.08, duration: 0.45, ease: "easeOut" },
-  }),
-};
-
-/* ─── Page ─── */
 export default function Home() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -82,374 +40,411 @@ export default function Home() {
   const {
     register,
     handleSubmit,
-    setValue,
-    control,
-    trigger,
     formState: { errors },
+    reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
       fullName: "",
       phone: "",
-      school: "",
+      email: "",
       website: "",
     },
   });
 
   const onSubmit = async (data: FormData) => {
-    // Honeypot check
-    if (data.website) return;
+  if (data.website) return;
 
-    setIsSubmitting(true);
-    try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+  setIsSubmitting(true);
+  try {
+    const response = await fetch("/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      toast.error("Đăng ký thất bại", {
+        description: result.error || "Vui lòng thử lại sau.",
       });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          result.error || "Đăng ký thất bại. Vui lòng thử lại sau.",
-        );
-      }
-
-      setSubmitted(true);
-    } catch (error: any) {
-      console.error(error);
-      alert(
-        error.message ||
-          "Đã xảy ra lỗi hệ thống khi đăng ký. Vui lòng liên hệ ban tổ chức.",
-      );
-    } finally {
-      setIsSubmitting(false);
+      return;
     }
-  };
+
+    toast.success("Đăng ký thành công", {
+      description: "Thông tin của bạn đã được ghi nhận.",
+    });
+
+    setSubmitted(true);
+    reset();
+  } catch (error: any) {
+    toast.error("Lỗi hệ thống", {
+      description:
+        error?.message || "Không thể gửi đăng ký. Vui lòng thử lại.",
+    });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
-    <div className="relative min-h-screen bg-background font-sans selection:bg-blue-200">
+    <div className="min-h-screen bg-white text-slate-900">
       <main>
-        {/* ── Hero Banner ── */}
-        <section
-          className="relative w-full h-[100svh] flex flex-col items-center overflow-hidden"
-          style={{
-            background:
-              "linear-gradient(180deg, #F7FBFF 0%, #F0F7FC 40%, #E6F1FA 100%)",
-          }}
-        >
-          {/* Soft decorative blobs */}
-          <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-blue-200/30 blur-[100px] pointer-events-none" />
-          <div className="absolute top-[20%] left-[-10%] w-[400px] h-[400px] rounded-full bg-sky-200/30 blur-[100px] pointer-events-none" />
-
-          {/* Wrapper để control layout */}
-          <div className="relative z-20 w-full max-w-4xl px-4 flex flex-col items-center text-center pt-[6vh] sm:pt-[7vh] h-full">
-            {/* Logo */}
-            <motion.div
-              initial={{ y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
-              className="mb-6 sm:mb-10"
-            >
-              <img
-                src="/logofinal.png"
-                alt="Logo"
-                className="h-12 sm:h-16 w-auto object-contain"
-              />
-            </motion.div>
-
-            {/* Headline + CTA */}
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
-              className="w-full flex flex-col items-center"
-            >
-              <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-wider text-[#2D6EB5] leading-[1.15] mb-5 sm:mb-6">
-                ĐĂNG KÍ THI THỬ
-                <br />
-                THPT MÔN TOÁN
-              </h1>
-
-              <Button
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                  e.preventDefault();
-                  document
-                    .getElementById("registration-form")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }}
-                size="lg"
-                className="relative group rounded-full px-10 py-5 sm:px-14 sm:py-7
-          text-sm sm:text-lg font-bold uppercase tracking-wider
-          bg-[#4A90D9] hover:bg-[#3A7BC8] text-white
-          shadow-[0_4px_20px_-4px_rgba(74,144,217,0.5)]
-          transition-all duration-300 hover:scale-105
-          overflow-hidden animate-[pulseSoft_3s_ease-in-out_infinite]"
-              >
-                <span className="relative z-10">ĐĂNG KÍ NGAY</span>
-                <div
-                  className="absolute inset-0 h-full w-full
-            bg-gradient-to-r from-transparent via-white/20 to-transparent
-            -translate-x-[120%] animate-[shimmerSlow_4s_linear_infinite]"
-                />
-              </Button>
-            </motion.div>
-
-            {/* Iconedu: mobile nằm ngay dưới CTA, desktop có thể dính đáy */}
-            <motion.div
-              initial={{ y: 28, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.35, duration: 0.6, ease: "easeOut" }}
-              className="w-full mt-10 md:mt-auto pb-6"
-            >
-              <img
-                src="/iconedu.png"
-                alt="Học sinh"
-                className="w-full h-auto object-contain max-h-[42vh] md:max-h-[55vh]"
-              />
-            </motion.div>
+        <section className="relative w-full overflow-hidden bg-white">
+          <div className="bg-[#0E55D8] px-4 py-5 sm:py-6">
+            <div className="mx-auto flex max-w-7xl items-center justify-center gap-3 text-center text-white">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm">
+                <GraduationCap className="h-6 w-6" />
+              </div>
+              <div className="text-lg font-extrabold uppercase tracking-wide sm:text-2xl md:text-3xl">
+                HỆ THỐNG LUYỆN THI THPT QUỐC GIA
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* ── Registration Form Section ── */}
-        <section
-          id="registration-form"
-          className="relative w-full min-h-[80vh] flex flex-col items-center justify-center py-24 bg-gradient-to-b from-[#4A8FCE] to-[#2E6B9E]"
-        >
-          <div className="text-center mb-10 w-full px-4 relative z-10">
-            <h2 className="font-heading text-3xl md:text-5xl font-black text-white uppercase tracking-wider mb-3 drop-shadow-md">
-              ĐĂNG KÍ THI THỬ THPT MÔN TOÁN
+        <section className="relative w-full h-[520px] md:h-[620px] overflow-hidden">
+          {/* Banner background */}
+          <img
+            src="/banner.png"
+            alt="banner"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+
+          {/* Content */}
+          <div className="relative z-10 flex h-full flex-col items-center justify-center text-center px-4">
+            <h1 className="text-3xl md:text-6xl font-extrabold text-[#1E5ED6] uppercase">
+              THI THỬ THPT MÔN TOÁN 2026
+            </h1>
+
+            <p className="mt-4 text-lg md:text-xl font-semibold text-[#1E5ED6]">
+              Tổng duyệt trước kỳ thi thật - Biết điểm thật - Tăng điểm thật
+            </p>
+
+            <button
+              onClick={() =>
+                document
+                  .getElementById("registration-form")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+              className="mt-8 bg-[#F4D75C] text-[#1E5ED6] font-bold px-8 py-4 rounded-full text-lg md:text-2xl shadow-lg hover:scale-105 transition"
+            >
+              ĐĂNG KÝ THI THỬ
+            </button>
+          </div>
+        </section>
+
+        <section className="w-full bg-[#F3F7FB] py-20 px-6">
+          <div className="max-w-6xl mx-auto text-center">
+            {/* Title */}
+            <h2 className="text-3xl md:text-4xl font-extrabold text-[#1E5ED6] uppercase">
+              HỆ THỐNG LUYỆN THI TIÊU CHUẨN
             </h2>
-            <div className="text-sm md:text-lg font-bold text-[#BEE3FA] drop-shadow-sm uppercase tracking-widest">
-              Tháng 5 này • Làm bài Online • 90 phút thử sức • Biết điểm ngay
+
+            <p className="mt-4 text-lg md:text-xl text-[#1E5ED6]">
+              Đề thi được xây dựng bám sát định hướng ra đề của Bộ Giáo dục và
+              Đào tạo Việt Nam:
+            </p>
+
+            {/* Boxes */}
+            <div className="mt-12 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-[#1656D6] text-white font-bold rounded-[28px] py-10 px-6 text-center text-lg md:text-xl">
+                ĐÚNG CHUẨN <br /> CẤU TRÚC ĐỀ THI
+              </div>
+
+              <div className="bg-[#1656D6] text-white font-bold rounded-[28px] py-10 px-6 text-center text-lg md:text-xl">
+                PHÂN BỔ <br /> THEO 4 MỨC ĐỘ
+              </div>
+
+              <div className="bg-[#1656D6] text-white font-bold rounded-[28px] py-10 px-6 text-center text-lg md:text-xl">
+                CÂU HỎI CHỌN LỌC <br /> PHÂN BỔ RÕ RÀNG
+              </div>
+
+              <div className="bg-[#1656D6] text-white font-bold rounded-[28px] py-10 px-6 text-center text-lg md:text-xl">
+                BÁM SÁT CHUYÊN ĐỀ <br /> TRỌNG TÂM
+              </div>
             </div>
           </div>
+        </section>
 
-          <div className="w-full max-w-[600px] px-4 relative z-10">
-            <div className="bg-white rounded-3xl p-2 sm:p-3 border-4 sm:border-[6px] border-dashed border-white/80 shadow-[0_0_50px_rgba(0,0,0,0.2)]">
-              {!submitted ? (
+        <section className="w-full bg-[#ffffff] px-6 py-16 md:px-10 md:py-24">
+          <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1.15fr_1.35fr]">
+            <div className="text-[#1656D6]">
+              <h2 className="text-3xl font-extrabold uppercase leading-tight md:text-4xl">
+                THI THỬ SỚM - LỢI THẾ SỚM
+              </h2>
+
+              <p className="mt-4 text-lg leading-relaxed md:text-2xl">
+                Rất nhiều học sinh đợi “gần thi mới test thử”.
+                <br />
+                Nhưng khi đó, nếu điểm thấp... sẽ rất khó cải thiện nhanh.
+              </p>
+
+              <div className="mt-10">
+                <h3 className="text-3xl font-extrabold uppercase md:text-4xl">
+                  ĐĂNG KÝ THI THỬ NGAY ĐỂ:
+                </h3>
+
+                <ul className="mt-5 space-y-1 text-lg leading-relaxed md:text-2xl">
+                  <li className="flex items-start gap-3">
+                    <CircleCheckBig className="mt-1 text-[#1E5ED6]" size={22} />
+                    <span>Chủ động điều chỉnh lộ trình ôn tập</span>
+                  </li>
+
+                  <li className="flex items-start gap-3">
+                    <CircleCheckBig className="mt-1 text-[#1E5ED6]" size={22} />
+                    <span>Xác định mục tiêu điểm rõ ràng (7+ | 8+ | 9+)</span>
+                  </li>
+
+                  <li className="flex items-start gap-3">
+                    <CircleCheckBig className="mt-1 text-[#1E5ED6]" size={22} />
+                    <span>
+                      Tăng 1 - 2 điểm sau mỗi lần điều chỉnh đúng cách
+                    </span>
+                  </li>
+                </ul>
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  document
+                    .getElementById("registration-form")
+                    ?.scrollIntoView({ behavior: "smooth" })
+                }
+                className="mt-12 inline-flex items-center rounded-full bg-[#F2DD63] px-10 py-5 text-lg md:text-2xl font-extrabold uppercase text-[#1656D6] transition hover:scale-[1.02]"
+              >
+                Đăng ký ngay
+                <span className="ml-3 text-4xl leading-none">→</span>
+              </button>
+            </div>
+
+            <div className="p-2 md:p-4">
+              <img
+                src="/feature.png"
+                alt="Thi thử sớm lợi thế sớm"
+                className="w-full h-auto rounded-[40px] translate-x-6 md:translate-x-12"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="w-full bg-[#EEF3F9] px-6 py-20 md:px-10 md:py-24">
+          <div className="mx-auto max-w-7xl">
+            <div className="text-center text-[#1656D6]">
+              <h2 className="text-3xl font-extrabold uppercase md:text-4xl">
+                QUYỀN LỢI KHI ĐĂNG KÝ SỚM
+              </h2>
+              <p className="mt-4 text-lg md:text-xl">
+                Đăng ký sớm để nhận ngay nhiều phần quà giá trị!
+              </p>
+            </div>
+
+            <div className="mx-auto mt-12 grid max-w-6xl gap-8 md:grid-cols-2">
+              <div className="flex items-center gap-5 rounded-[36px] bg-[#1557DD] px-8 py-10 text-white md:px-12">
+                <GraduationCap
+                  className="h-12 w-12 shrink-0"
+                  strokeWidth={2.5}
+                />
+                <span className="text-xl font-extrabold uppercase leading-snug md:text-2xl">
+                  THAM GIA THI THỬ MIỄN PHÍ
+                </span>
+              </div>
+
+              <div className="flex items-center gap-5 rounded-[36px] bg-[#1557DD] px-8 py-10 text-white md:px-12">
+                <NotebookText
+                  className="h-12 w-12 shrink-0"
+                  strokeWidth={2.5}
+                />
+                <span className="text-xl font-extrabold uppercase leading-snug md:text-2xl">
+                  NHẬN TÀI LIỆU ÔN TẬP
+                </span>
+              </div>
+
+              <div className="flex items-center gap-5 rounded-[36px] bg-[#1557DD] px-8 py-10 text-white md:px-12">
+                <SearchCheck className="h-12 w-12 shrink-0" strokeWidth={2.5} />
+                <span className="text-xl font-extrabold uppercase leading-snug md:text-2xl">
+                  NHẬN FILE PHÂN TÍCH CHI TIẾT
+                </span>
+              </div>
+
+              <div className="flex items-center gap-5 rounded-[36px] bg-[#1557DD] px-8 py-10 text-white md:px-12">
+                <BadgeCheck className="h-12 w-12 shrink-0" strokeWidth={2.5} />
+                <span className="text-xl font-extrabold uppercase leading-snug md:text-2xl">
+                  NHẬN TƯ VẤN CẢI THIỆN
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-12 flex justify-center">
+              <button
+                type="button"
+                onClick={() =>
+                  document
+                    .getElementById("registration-form")
+                    ?.scrollIntoView({ behavior: "smooth" })
+                }
+                className="inline-flex items-center rounded-full bg-[#F2DD63] px-8 py-4 text-xl font-extrabold uppercase text-[#1656D6] transition hover:scale-[1.02] md:px-10 md:py-5 md:text-2xl"
+              >
+                Đăng ký ngay
+                <ArrowRight className="ml-3 h-7 w-7" strokeWidth={3} />
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="registration-form"
+          className="relative w-full overflow-hidden min-h-[860px] md:min-h-[720px] lg:min-h-[620px]"
+        >
+          {/* Banner background */}
+          <img
+            src="/form.png"
+            alt="banner"
+            className="absolute inset-0 h-full w-full object-cover object-[62%_center] md:object-center"
+          />
+
+          {/* Content */}
+          <div className="relative z-10 h-full flex items-center">
+            <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-12 md:px-8 md:py-16 lg:grid-cols-2 lg:items-center lg:gap-12">
+              {/* LEFT */}
+              <div className="text-[#1E5ED6]">
+                <h2 className="text-3xl font-extrabold uppercase leading-tight md:text-4xl">
+                  ĐĂNG KÝ THAM GIA THI THỬ
+                </h2>
+
+                <h3 className="mt-8 text-xl font-bold uppercase md:text-3xl">
+                  THÔNG TIN KỲ THI
+                </h3>
+
+                <ul className="mt-4 space-y-4 text-lg md:text-2xl">
+                  <li className="flex items-start gap-3">
+                    <Users className="mt-1 shrink-0 text-[#1E5ED6]" size={24} />
+                    <span>Đối tượng: Học sinh lớp 12</span>
+                  </li>
+
+                  <li className="flex items-start gap-3">
+                    <Monitor
+                      className="mt-1 shrink-0 text-[#1E5ED6]"
+                      size={24}
+                    />
+                    <span>Hình thức: Online</span>
+                  </li>
+
+                  <li className="flex items-start gap-3">
+                    <Clock className="mt-1 shrink-0 text-[#1E5ED6]" size={24} />
+                    <span>Thời gian: 90 phút</span>
+                  </li>
+
+                  <li className="flex items-start gap-3">
+                    <CheckCircle
+                      className="mt-1 shrink-0 text-[#1E5ED6]"
+                      size={24}
+                    />
+                    <span>Công bố điểm ngay sau khi nộp bài</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* RIGHT */}
+              <div className="text-[#1E5ED6]">
+                <h3 className="text-center text-xl font-bold uppercase md:text-3xl">
+                  THÔNG TIN CÁ NHÂN
+                </h3>
+
                 <form
-                  onSubmit={handleSubmit(onSubmit, (errors) =>
-                    console.log("Form validation errors:", errors),
-                  )}
-                  className="w-full rounded-2xl overflow-hidden bg-gradient-to-b from-[#55abfa] to-[#3a71f0] p-6 sm:p-12 flex flex-col items-center shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
-                  noValidate
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="mt-6 space-y-4"
                 >
-                  <h3 className="font-heading text-3xl sm:text-4xl font-black text-white mb-10 drop-shadow-md uppercase text-center w-full tracking-wider">
-                    THÔNG TIN ĐĂNG KÝ
-                  </h3>
-
-                  <div className="w-full space-y-6">
-                    {/* Honeypot */}
-                    <div
-                      className="absolute -left-[9999px] opacity-0"
-                      aria-hidden="true"
-                    >
-                      <input
-                        type="text"
-                        tabIndex={-1}
-                        autoComplete="off"
-                        {...register("website")}
-                      />
-                    </div>
-
-                    <div className="relative">
-                      <Input
-                        id="fullName"
-                        placeholder="Họ và Tên"
-                        {...register("fullName")}
-                        className="w-full bg-[#f4f4f4] border-0 rounded-none h-14 sm:h-16 px-5 sm:px-6 text-base sm:text-lg font-semibold text-gray-900 placeholder:text-gray-900 focus-visible:ring-2 focus-visible:ring-white/30 shadow-none"
-                      />
-                      {errors.fullName && (
-                        <p className="text-sm text-red-100 mt-1">
-                          {errors.fullName.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="relative">
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="Số điện thoại"
-                        {...register("phone")}
-                        className="w-full bg-[#f4f4f4] border-0 rounded-none h-14 sm:h-16 px-5 sm:px-6 text-base sm:text-lg font-semibold text-gray-900 placeholder:text-gray-900 focus-visible:ring-2 focus-visible:ring-white/30 shadow-none"
-                      />
-                      {errors.phone && (
-                        <p className="text-sm text-red-100 mt-1">
-                          {errors.phone.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="relative">
-                      <Input
-                        id="school"
-                        placeholder="Trường THPT đang theo học"
-                        {...register("school")}
-                        className="w-full bg-[#f4f4f4] border-0 rounded-none h-14 sm:h-16 px-5 sm:px-6 text-base sm:text-lg font-semibold text-gray-900 placeholder:text-gray-900 focus-visible:ring-2 focus-visible:ring-white/30 shadow-none"
-                      />
-                      {errors.school && (
-                        <p className="text-sm text-red-100 mt-1">
-                          {errors.school.message}
-                        </p>
-                      )}
-                    </div>
+                  <div
+                    className="absolute -left-[9999px] opacity-0"
+                    aria-hidden="true"
+                  >
+                    <input
+                      type="text"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      {...register("website")}
+                    />
                   </div>
 
-                  <div className="mt-10 w-full">
-                    <Button
+                  <div>
+                    <label className="mb-2 block text-sm md:text-lg">
+                      Họ và tên
+                    </label>
+                    <input
+                      type="text"
+                      {...register("fullName")}
+                      className="w-full rounded-full bg-[#F4D75C] px-6 py-3 md:py-4 outline-none"
+                    />
+                    {errors.fullName && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.fullName.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm md:text-lg">
+                      Số điện thoại
+                    </label>
+                    <input
+                      type="tel"
+                      {...register("phone")}
+                      className="w-full rounded-full bg-[#F4D75C] px-6 py-3 md:py-4 outline-none"
+                    />
+                    {errors.phone && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.phone.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm md:text-lg">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      {...register("email")}
+                      className="w-full rounded-full bg-[#F4D75C] px-6 py-3 md:py-4 outline-none"
+                    />
+                    {errors.email && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.email.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex justify-center pt-4">
+                    <button
                       type="submit"
                       disabled={isSubmitting}
-                      size="lg"
-                      className="relative group font-heading w-full h-16 sm:h-20
-  inline-flex items-center justify-center
-  rounded-none
-  bg-gradient-to-r from-[#EF6538] via-[#E8404E] to-[#DC1F68]
-  text-2xl sm:text-3xl font-black text-white
-  uppercase tracking-wider
-  transition-all duration-300
-  hover:scale-[1.02]
-  overflow-hidden
-  animate-[pulseSoft_3s_ease-in-out_infinite]
-  disabled:opacity-70 disabled:cursor-not-allowed"
+                      className="rounded-full bg-[#F4D75C] px-8 py-3 text-lg font-bold text-[#1E5ED6] transition hover:scale-105 md:text-xl disabled:opacity-70"
                     >
-                      <span className="relative z-10 flex items-center">
-                        {isSubmitting ? (
-                          <>
-                            <Loader2 className="size-6 animate-spin mr-2" />
-                            Đang gửi...
-                          </>
-                        ) : (
-                          "ĐĂNG KÝ THI"
-                        )}
-                      </span>
-
-                      {/* shimmer */}
-                      {!isSubmitting && (
-                        <div
-                          className="absolute inset-0 h-full w-full
-      bg-gradient-to-r from-transparent via-white/25 to-transparent
-      -translate-x-[120%]
-      animate-[shimmerSlow_3.5s_linear_infinite]"
-                        />
-                      )}
-                    </Button>
+                      {isSubmitting ? "ĐANG GỬI..." : "ĐĂNG KÝ"}
+                    </button>
                   </div>
                 </form>
-              ) : (
-                <>
-                  {/* Success State */}
-                  <div className="relative bg-white text-center rounded-2xl h-[520px] flex flex-col items-center justify-center px-6 sm:px-10 overflow-hidden">
-                    {/* subtle background glow */}
-                    <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-emerald-200/40 blur-3xl" />
-                    <div className="pointer-events-none absolute -bottom-28 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-blue-200/30 blur-3xl" />
-
-                    <motion.div
-                      initial={{ scale: 0.85, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 180,
-                        damping: 16,
-                      }}
-                      className="relative z-10 mb-7"
-                    >
-                      <div className="flex size-28 items-center justify-center rounded-full bg-emerald-100/70 shadow-[0_18px_55px_rgba(16,185,129,0.28)]">
-                        <div className="flex size-16 items-center justify-center rounded-full bg-white ring-4 ring-emerald-500/30">
-                          <CheckCircle2 className="size-10 text-emerald-600" />
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ y: 10, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{
-                        delay: 0.08,
-                        duration: 0.35,
-                        ease: "easeOut",
-                      }}
-                      className="relative z-10"
-                    >
-                      <h2 className="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                        Đăng ký thành công!
-                      </h2>
-
-                      <p className="mt-3 text-slate-600 max-w-md mx-auto text-base sm:text-lg leading-relaxed">
-                        Chúng tôi đã nhận thông tin đăng ký của bạn.
-                        <br />
-                        Trung tâm sẽ sớm liên hệ qua số điện thoại để tư vấn và
-                        hoàn tất thủ tục.
-                      </p>
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ y: 12, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{
-                        delay: 0.16,
-                        duration: 0.35,
-                        ease: "easeOut",
-                      }}
-                      className="relative z-10 mt-8"
-                    >
-                      <Button
-                        onClick={() => {
-                          setSubmitted(false);
-                          document
-                            .getElementById("registration-form")
-                            ?.scrollIntoView({ behavior: "smooth" });
-                        }}
-                        className="relative group rounded-full px-10 py-5 sm:px-14 sm:py-7
-  text-sm sm:text-lg font-bold uppercase tracking-wider
-  bg-[#4A90D9] hover:bg-[#3A7BC8] text-white
-  shadow-[0_4px_20px_-4px_rgba(74,144,217,0.5)]
-  transition-all duration-300
-  hover:scale-105
-  overflow-hidden
-  animate-[pulseSoft_3s_ease-in-out_infinite]"
-                      >
-                        <span className="relative z-10">Đăng ký thêm</span>
-
-                        {/* shimmer auto */}
-                        <div
-                          className="absolute inset-0 h-full w-full
-    bg-gradient-to-r from-transparent via-white/20 to-transparent
-    -translate-x-[120%]
-    animate-[shimmerSlow_4s_linear_infinite]"
-                        />
-                      </Button>
-
-                      <div className="mt-4 text-xs text-slate-500">
-                        Bạn có thể đăng ký thêm cho bạn bè hoặc người thân.
-                      </div>
-                    </motion.div>
-                  </div>
-                </>
-              )}
+              </div>
             </div>
           </div>
         </section>
       </main>
 
-      <motion.footer
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-        className="mt-8 text-center"
-      >
-        <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
-          <ShieldCheck className="size-3.5" />
-          Thông tin được bảo mật và chỉ dùng để gửi hướng dẫn/kết quả.
-        </p>
-        <p className="mt-3 text-xs text-muted-foreground/60">
-          © 2026 Thi thử Toán Online
-        </p>
-      </motion.footer>
+      <footer className="bg-gradient-to-b from-[#0E55D8] to-[#1D73E8] px-4 py-26">
+        <div className="mx-auto flex max-w-7xl items-center justify-center gap-3 text-center text-white">
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm">
+            <GraduationCap className="h-6 w-6" />
+          </div>
+          <div className="text-lg font-extrabold uppercase tracking-wide sm:text-2xl md:text-3xl">
+            HỆ THỐNG LUYỆN THI THPT QUỐC GIA
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
