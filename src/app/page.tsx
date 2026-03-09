@@ -53,42 +53,37 @@ export default function Home() {
   });
 
   const onSubmit = async (data: FormData) => {
-  if (data.website) return;
+    if (data.website) return;
 
-  setIsSubmitting(true);
-  try {
-    const response = await fetch("/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      toast.error("Đăng ký thất bại", {
-        description: result.error || "Vui lòng thử lại sau.",
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       });
-      return;
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.error || "Đăng ký thất bại. Vui lòng thử lại sau.",
+        );
+      }
+
+      setSubmitted(true);
+      reset();
+    } catch (error: any) {
+      alert(
+        error?.message ||
+          "Đã xảy ra lỗi hệ thống khi đăng ký. Vui lòng liên hệ ban tổ chức.",
+      );
+    } finally {
+      setIsSubmitting(false);
     }
-
-    toast.success("Đăng ký thành công", {
-      description: "Thông tin của bạn đã được ghi nhận.",
-    });
-
-    setSubmitted(true);
-    reset();
-  } catch (error: any) {
-    toast.error("Lỗi hệ thống", {
-      description:
-        error?.message || "Không thể gửi đăng ký. Vui lòng thử lại.",
-    });
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -106,21 +101,19 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="relative w-full h-[520px] md:h-[620px] overflow-hidden">
-          {/* Banner background */}
+        <section className="relative w-full h-[520px] md:h-auto overflow-hidden">
           <img
             src="/banner.png"
             alt="banner"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover md:static md:h-auto md:w-full md:object-contain"
           />
 
-          {/* Content */}
-          <div className="relative z-10 flex h-full flex-col items-center justify-center text-center px-4">
-            <h1 className="text-3xl md:text-6xl font-extrabold text-[#1E5ED6] uppercase">
+          <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center md:absolute md:inset-0">
+            <h1 className="text-3xl font-extrabold uppercase text-[#1E5ED6] md:text-6xl">
               THI THỬ THPT MÔN TOÁN 2026
             </h1>
 
-            <p className="mt-4 text-lg md:text-xl font-semibold text-[#1E5ED6]">
+            <p className="mt-4 text-lg font-semibold text-[#1E5ED6] md:text-xl">
               Tổng duyệt trước kỳ thi thật - Biết điểm thật - Tăng điểm thật
             </p>
 
@@ -130,7 +123,7 @@ export default function Home() {
                   .getElementById("registration-form")
                   ?.scrollIntoView({ behavior: "smooth" })
               }
-              className="mt-8 bg-[#F4D75C] text-[#1E5ED6] font-bold px-8 py-4 rounded-full text-lg md:text-2xl shadow-lg hover:scale-105 transition"
+              className="mt-8 rounded-full bg-[#F4D75C] px-8 py-4 text-lg font-bold text-[#1E5ED6] shadow-lg transition hover:scale-105 md:text-2xl"
             >
               ĐĂNG KÝ THI THỬ
             </button>
@@ -171,66 +164,78 @@ export default function Home() {
         </section>
 
         <section className="w-full bg-[#ffffff] px-6 py-16 md:px-10 md:py-24">
-          <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1.15fr_1.35fr]">
-            <div className="text-[#1656D6]">
-              <h2 className="text-3xl font-extrabold uppercase leading-tight md:text-4xl">
-                THI THỬ SỚM - LỢI THẾ SỚM
-              </h2>
+          <div className="mx-auto grid max-w-7xl items-stretch gap-10 lg:grid-cols-2">
+            <div className="flex h-full">
+              <div className="flex w-full flex-col justify-center text-[#1656D6]">
+                <h2 className="text-3xl font-extrabold uppercase leading-tight md:text-4xl">
+                  THI THỬ SỚM - LỢI THẾ SỚM
+                </h2>
 
-              <p className="mt-4 text-lg leading-relaxed md:text-2xl">
-                Rất nhiều học sinh đợi “gần thi mới test thử”.
-                <br />
-                Nhưng khi đó, nếu điểm thấp... sẽ rất khó cải thiện nhanh.
-              </p>
+                <p className="mt-4 text-lg leading-relaxed md:text-2xl">
+                  Rất nhiều học sinh đợi “gần thi mới test thử”.
+                  <br />
+                  Nhưng khi đó, nếu điểm thấp... sẽ rất khó cải thiện nhanh.
+                </p>
 
-              <div className="mt-10">
-                <h3 className="text-3xl font-extrabold uppercase md:text-4xl">
-                  ĐĂNG KÝ THI THỬ NGAY ĐỂ:
-                </h3>
+                <div className="mt-10">
+                  <h3 className="text-2xl font-extrabold uppercase md:text-2xl">
+                    ĐĂNG KÝ THI THỬ NGAY ĐỂ:
+                  </h3>
 
-                <ul className="mt-5 space-y-1 text-lg leading-relaxed md:text-2xl">
-                  <li className="flex items-start gap-3">
-                    <CircleCheckBig className="mt-1 text-[#1E5ED6]" size={22} />
-                    <span>Chủ động điều chỉnh lộ trình ôn tập</span>
-                  </li>
+                  <ul className="mt-4 space-y-0 text-lg leading-relaxed md:text-2xl">
+                    <li className="flex items-start gap-3">
+                      <CircleCheckBig
+                        className="mt-1 text-[#1E5ED6]"
+                        size={22}
+                      />
+                      <span>Chủ động điều chỉnh lộ trình ôn tập</span>
+                    </li>
 
-                  <li className="flex items-start gap-3">
-                    <CircleCheckBig className="mt-1 text-[#1E5ED6]" size={22} />
-                    <span>Xác định mục tiêu điểm rõ ràng (7+ | 8+ | 9+)</span>
-                  </li>
+                    <li className="flex items-start gap-3">
+                      <CircleCheckBig
+                        className="mt-1 text-[#1E5ED6]"
+                        size={22}
+                      />
+                      <span>Xác định mục tiêu điểm rõ ràng (7+ | 8+ | 9+)</span>
+                    </li>
 
-                  <li className="flex items-start gap-3">
-                    <CircleCheckBig className="mt-1 text-[#1E5ED6]" size={22} />
-                    <span>
-                      Tăng 1 - 2 điểm sau mỗi lần điều chỉnh đúng cách
-                    </span>
-                  </li>
-                </ul>
+                    <li className="flex items-start gap-3">
+                      <CircleCheckBig
+                        className="mt-1 text-[#1E5ED6]"
+                        size={22}
+                      />
+                      <span>
+                        Tăng 1 - 2 điểm sau mỗi lần điều chỉnh đúng cách
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    document
+                      .getElementById("registration-form")
+                      ?.scrollIntoView({ behavior: "smooth" })
+                  }
+                  className="mt-12 inline-flex w-fit items-center rounded-full bg-[#F2DD63] px-10 py-5 text-lg font-extrabold uppercase text-[#1656D6] transition hover:scale-[1.02] md:text-2xl"
+                >
+                  Đăng ký ngay
+                  <span className="ml-3 text-4xl leading-none">→</span>
+                </button>
               </div>
-
-              <button
-                type="button"
-                onClick={() =>
-                  document
-                    .getElementById("registration-form")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="mt-12 inline-flex items-center rounded-full bg-[#F2DD63] px-10 py-5 text-lg md:text-2xl font-extrabold uppercase text-[#1656D6] transition hover:scale-[1.02]"
-              >
-                Đăng ký ngay
-                <span className="ml-3 text-4xl leading-none">→</span>
-              </button>
             </div>
 
-            <div className="p-2 md:p-4">
+            <div className="flex h-full items-center justify-center overflow-hidden rounded-[40px] bg-[#F3F6FF] p-6 md:p-8">
               <img
                 src="/feature.png"
                 alt="Thi thử sớm lợi thế sớm"
-                className="w-full h-auto rounded-[40px] translate-x-6 md:translate-x-12"
+                className="block max-h-full w-full object-contain"
               />
             </div>
           </div>
         </section>
+
 
         <section className="w-full bg-[#EEF3F9] px-6 py-20 md:px-10 md:py-24">
           <div className="mx-auto max-w-7xl">
@@ -296,20 +301,28 @@ export default function Home() {
           </div>
         </section>
 
+
         <section
           id="registration-form"
-          className="relative w-full overflow-hidden min-h-[860px] md:min-h-[720px] lg:min-h-[620px]"
+          className="relative w-full min-h-[860px] overflow-hidden md:min-h-0"
         >
-          {/* Banner background */}
+          {/* Mobile background */}
           <img
             src="/form.png"
             alt="banner"
-            className="absolute inset-0 h-full w-full object-cover object-[62%_center] md:object-center"
+            className="absolute inset-0 h-full w-full object-cover object-[62%_center] md:hidden"
+          />
+
+          {/* Desktop background */}
+          <img
+            src="/form.png"
+            alt="banner"
+            className="hidden w-full h-auto md:block"
           />
 
           {/* Content */}
-          <div className="relative z-10 h-full flex items-center">
-            <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-12 md:px-8 md:py-16 lg:grid-cols-2 lg:items-center lg:gap-12">
+          <div className="relative z-10 md:absolute md:inset-0">
+            <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-12 md:h-full md:px-8 md:py-16 lg:grid-cols-2 lg:items-center lg:gap-12">
               {/* LEFT */}
               <div className="text-[#1E5ED6]">
                 <h2 className="text-3xl font-extrabold uppercase leading-tight md:text-4xl">
@@ -435,7 +448,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="bg-gradient-to-b from-[#0E55D8] to-[#1D73E8] px-4 py-26">
+      <footer className="bg-gradient-to-b from-[#0E55D8] to-[#1D73E8] px-4 py-33">
         <div className="mx-auto flex max-w-7xl items-center justify-center gap-3 text-center text-white">
           <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm">
             <GraduationCap className="h-6 w-6" />
