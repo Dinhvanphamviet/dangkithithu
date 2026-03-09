@@ -53,37 +53,39 @@ export default function Home() {
   });
 
   const onSubmit = async (data: FormData) => {
-    if (data.website) return;
+  if (data.website) return;
 
-    setIsSubmitting(true);
-    try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+  setIsSubmitting(true);
+  try {
+    const response = await fetch("/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
 
-      const result = await response.json();
+    const result = await response.json();
 
-      if (!response.ok) {
-        throw new Error(
-          result.error || "Đăng ký thất bại. Vui lòng thử lại sau.",
-        );
-      }
-
-      setSubmitted(true);
-      reset();
-    } catch (error: any) {
-      alert(
-        error?.message ||
-          "Đã xảy ra lỗi hệ thống khi đăng ký. Vui lòng liên hệ ban tổ chức.",
+    if (!response.ok) {
+      throw new Error(
+        result.error || "Đăng ký thất bại. Vui lòng thử lại sau."
       );
-    } finally {
-      setIsSubmitting(false);
     }
-  };
+
+    toast.success("Đăng ký thành công 🎉"); 
+
+    setSubmitted(true);
+    reset();
+  } catch (error: any) {
+    toast.error(
+      error?.message ||
+        "Đã xảy ra lỗi hệ thống khi đăng ký. Vui lòng liên hệ ban tổ chức."
+    ); 
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
