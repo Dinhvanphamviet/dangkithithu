@@ -379,6 +379,7 @@ export default function Home() {
                         <input
                           type="text"
                           {...register("fullName")}
+                          placeholder="Nhập họ và tên"
                           className="w-full rounded-full bg-[#F4D75C] px-6 py-3 outline-none md:py-4"
                         />
                         {errors.fullName && (
@@ -395,6 +396,7 @@ export default function Home() {
                         <input
                           type="tel"
                           {...register("phone")}
+                          placeholder="Nhập chính xác số điện thoại"
                           className="w-full rounded-full bg-[#F4D75C] px-6 py-3 outline-none md:py-4"
                         />
                         {errors.phone && (
@@ -411,6 +413,7 @@ export default function Home() {
                         <input
                           type="email"
                           {...register("email")}
+                          placeholder="Nhập chính xác Email để nhận tài khoản thi"
                           className="w-full rounded-full bg-[#F4D75C] px-6 py-3 outline-none md:py-4"
                         />
                         {errors.email && (
