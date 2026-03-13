@@ -33,7 +33,8 @@ type FormData = z.infer<typeof schema>;
 export default function Home() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const FACEBOOK_PAGE_URL = "https://www.facebook.com/profile.php?id=61579516583941";
+  const FACEBOOK_PAGE_URL =
+    "https://www.facebook.com/profile.php?id=61579516583941";
 
   const {
     register,
@@ -51,43 +52,43 @@ export default function Home() {
   });
 
   const onSubmit = async (data: FormData) => {
-  if (data.website) return;
+    if (data.website) return;
 
-  setIsSubmitting(true);
-  try {
-    const response = await fetch("/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    setIsSubmitting(true);
 
-    const result = await response.json();
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-    if (!response.ok) {
-      throw new Error(
-        result.error || "Đăng ký thất bại. Vui lòng thử lại sau."
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.error || "Đăng ký thất bại. Vui lòng thử lại sau."
+        );
+      }
+
+      toast.success("Đăng ký thành công 🎉");
+      setSubmitted(true);
+      reset();
+    } catch (error: any) {
+      toast.error(
+        error?.message ||
+          "Đã xảy ra lỗi hệ thống khi đăng ký. Vui lòng liên hệ ban tổ chức."
       );
+    } finally {
+      setIsSubmitting(false);
     }
-
-    toast.success("Đăng ký thành công 🎉"); 
-
-    setSubmitted(true);
-    reset();
-  } catch (error: any) {
-    toast.error(
-      error?.message ||
-        "Đã xảy ra lỗi hệ thống khi đăng ký. Vui lòng liên hệ ban tổ chức."
-    ); 
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900">
-      <main>
+    <div className="flex min-h-screen flex-col bg-white text-slate-900">
+      <main className="flex-1">
         <section className="relative w-full overflow-hidden bg-white">
           <div className="bg-[#0E55D8] px-4 py-5 sm:py-6">
             <div className="mx-auto flex max-w-7xl items-center justify-center gap-3 text-center text-white">
@@ -101,7 +102,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="relative w-full h-[520px] md:h-auto overflow-hidden">
+        <section className="relative w-full overflow-hidden h-[520px] md:h-auto">
           <img
             src="/banner.png"
             alt="banner"
@@ -130,40 +131,38 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="w-full bg-[#F3F7FB] py-20 px-6">
-          <div className="max-w-6xl mx-auto text-center">
-            {/* Title */}
-            <h2 className="text-3xl md:text-4xl font-extrabold text-[#1E5ED6] uppercase">
+        <section className="w-full bg-[#F3F7FB] px-6 py-20">
+          <div className="mx-auto max-w-6xl text-center">
+            <h2 className="text-3xl font-extrabold uppercase text-[#1E5ED6] md:text-4xl">
               HỆ THỐNG LUYỆN THI TIÊU CHUẨN
             </h2>
 
-            <p className="mt-4 text-lg md:text-xl text-[#1E5ED6]">
+            <p className="mt-4 text-lg text-[#1E5ED6] md:text-xl">
               Đề thi được xây dựng bám sát định hướng ra đề của Bộ Giáo dục và
               Đào tạo Việt Nam:
             </p>
 
-            {/* Boxes */}
-            <div className="mt-12 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-[#1656D6] text-white font-bold rounded-[28px] py-10 px-6 text-center text-lg md:text-xl">
+            <div className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-[28px] bg-[#1656D6] px-6 py-10 text-center text-lg font-bold text-white md:text-xl">
                 ĐÚNG CHUẨN <br /> CẤU TRÚC ĐỀ THI
               </div>
 
-              <div className="bg-[#1656D6] text-white font-bold rounded-[28px] py-10 px-6 text-center text-lg md:text-xl">
+              <div className="rounded-[28px] bg-[#1656D6] px-6 py-10 text-center text-lg font-bold text-white md:text-xl">
                 PHÂN BỔ <br /> THEO 4 MỨC ĐỘ
               </div>
 
-              <div className="bg-[#1656D6] text-white font-bold rounded-[28px] py-10 px-6 text-center text-lg md:text-xl">
+              <div className="rounded-[28px] bg-[#1656D6] px-6 py-10 text-center text-lg font-bold text-white md:text-xl">
                 CÂU HỎI CHỌN LỌC <br /> PHÂN BỔ RÕ RÀNG
               </div>
 
-              <div className="bg-[#1656D6] text-white font-bold rounded-[28px] py-10 px-6 text-center text-lg md:text-xl">
+              <div className="rounded-[28px] bg-[#1656D6] px-6 py-10 text-center text-lg font-bold text-white md:text-xl">
                 BÁM SÁT CHUYÊN ĐỀ <br /> TRỌNG TÂM
               </div>
             </div>
           </div>
         </section>
 
-        <section className="w-full bg-[#ffffff] px-6 py-16 md:px-10 md:py-24">
+        <section className="w-full bg-white px-6 py-16 md:px-10 md:py-24">
           <div className="mx-auto grid max-w-7xl items-stretch gap-10 lg:grid-cols-2">
             <div className="flex h-full">
               <div className="flex w-full flex-col justify-center text-[#1656D6]">
@@ -236,8 +235,7 @@ export default function Home() {
           </div>
         </section>
 
-
-        <section className="w-full bg-[#EEF3F9] px-6 py-20 md:px-10 md:py-24">
+        <section className="w-full bg-[#EEF3F9] px-6 pt-14 pb-6 md:px-10 md:pt-16 md:pb-8">
           <div className="mx-auto max-w-7xl">
             <div className="text-center text-[#1656D6]">
               <h2 className="text-3xl font-extrabold uppercase md:text-4xl">
@@ -301,29 +299,21 @@ export default function Home() {
           </div>
         </section>
 
-
-        <section
-          id="registration-form"
-          className="relative w-full min-h-[860px] overflow-hidden md:min-h-0"
-        >
-          {/* Mobile background */}
+        <section id="registration-form" className="relative w-full overflow-hidden">
           <img
             src="/form.png"
             alt="banner"
             className="absolute inset-0 h-full w-full object-cover object-[62%_center] md:hidden"
           />
 
-          {/* Desktop background */}
           <img
             src="/form.png"
             alt="banner"
-            className="hidden w-full h-auto md:block"
+            className="absolute inset-0 hidden h-full w-full object-cover md:block"
           />
 
-          {/* Content */}
-          <div className="relative z-10 md:absolute md:inset-0">
-            <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-12 md:h-full md:px-8 md:py-16 lg:grid-cols-2 lg:items-center lg:gap-12">
-              {/* LEFT */}
+          <div className="relative z-10">
+            <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-12 md:px-8 md:py-16 lg:grid-cols-2 lg:items-center lg:gap-12">
               <div className="text-[#1E5ED6]">
                 <h2 className="text-3xl font-extrabold uppercase leading-tight md:text-4xl">
                   ĐĂNG KÝ THAM GIA THI THỬ
@@ -362,137 +352,135 @@ export default function Home() {
                 </ul>
               </div>
 
-              {/* RIGHT */}
               <div className="text-[#1E5ED6]">
-  {!submitted ? (
-    <>
-      <h3 className="text-center text-xl font-bold uppercase md:text-3xl">
-        THÔNG TIN CÁ NHÂN
-      </h3>
+                {!submitted ? (
+                  <>
+                    <h3 className="text-center text-xl font-bold uppercase md:text-3xl">
+                      THÔNG TIN CÁ NHÂN
+                    </h3>
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="mt-6 space-y-4"
-      >
-        <div
-          className="absolute -left-[9999px] opacity-0"
-          aria-hidden="true"
-        >
-          <input
-            type="text"
-            tabIndex={-1}
-            autoComplete="off"
-            {...register("website")}
-          />
-        </div>
+                    <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
+                      <div
+                        className="absolute -left-[9999px] opacity-0"
+                        aria-hidden="true"
+                      >
+                        <input
+                          type="text"
+                          tabIndex={-1}
+                          autoComplete="off"
+                          {...register("website")}
+                        />
+                      </div>
 
-        <div>
-          <label className="mb-2 block text-sm md:text-lg">
-            Họ và tên
-          </label>
-          <input
-            type="text"
-            {...register("fullName")}
-            className="w-full rounded-full bg-[#F4D75C] px-6 py-3 md:py-4 outline-none"
-          />
-          {errors.fullName && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.fullName.message}
-            </p>
-          )}
-        </div>
+                      <div>
+                        <label className="mb-2 block text-sm md:text-lg">
+                          Họ và tên
+                        </label>
+                        <input
+                          type="text"
+                          {...register("fullName")}
+                          className="w-full rounded-full bg-[#F4D75C] px-6 py-3 outline-none md:py-4"
+                        />
+                        {errors.fullName && (
+                          <p className="mt-1 text-sm text-red-600">
+                            {errors.fullName.message}
+                          </p>
+                        )}
+                      </div>
 
-        <div>
-          <label className="mb-2 block text-sm md:text-lg">
-            Số điện thoại
-          </label>
-          <input
-            type="tel"
-            {...register("phone")}
-            className="w-full rounded-full bg-[#F4D75C] px-6 py-3 md:py-4 outline-none"
-          />
-          {errors.phone && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.phone.message}
-            </p>
-          )}
-        </div>
+                      <div>
+                        <label className="mb-2 block text-sm md:text-lg">
+                          Số điện thoại
+                        </label>
+                        <input
+                          type="tel"
+                          {...register("phone")}
+                          className="w-full rounded-full bg-[#F4D75C] px-6 py-3 outline-none md:py-4"
+                        />
+                        {errors.phone && (
+                          <p className="mt-1 text-sm text-red-600">
+                            {errors.phone.message}
+                          </p>
+                        )}
+                      </div>
 
-        <div>
-          <label className="mb-2 block text-sm md:text-lg">
-            Email
-          </label>
-          <input
-            type="email"
-            {...register("email")}
-            className="w-full rounded-full bg-[#F4D75C] px-6 py-3 md:py-4 outline-none"
-          />
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.email.message}
-            </p>
-          )}
-        </div>
+                      <div>
+                        <label className="mb-2 block text-sm md:text-lg">
+                          Email
+                        </label>
+                        <input
+                          type="email"
+                          {...register("email")}
+                          className="w-full rounded-full bg-[#F4D75C] px-6 py-3 outline-none md:py-4"
+                        />
+                        {errors.email && (
+                          <p className="mt-1 text-sm text-red-600">
+                            {errors.email.message}
+                          </p>
+                        )}
+                      </div>
 
-        <div className="flex justify-center pt-4">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="rounded-full bg-[#F4D75C] px-8 py-3 text-lg font-bold text-[#1E5ED6] transition hover:scale-105 md:text-xl disabled:opacity-70"
-          >
-            {isSubmitting ? "ĐANG GỬI..." : "ĐĂNG KÝ"}
-          </button>
-        </div>
-      </form>
-    </>
-  ) : (
-    <div className="mx-auto max-w-xl rounded-[32px] bg-white/95 p-8 text-center shadow-[0_20px_60px_rgba(30,94,214,0.18)] backdrop-blur">
-      <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#E8F2FF]">
-        <CheckCircle className="h-10 w-10 text-[#1E5ED6]" />
-      </div>
+                      <div className="flex justify-center pt-4">
+                        <button
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="rounded-full bg-[#F4D75C] px-8 py-3 text-lg font-bold text-[#1E5ED6] transition hover:scale-105 disabled:opacity-70 md:text-xl"
+                        >
+                          {isSubmitting ? "ĐANG GỬI..." : "ĐĂNG KÝ"}
+                        </button>
+                      </div>
+                    </form>
+                  </>
+                ) : (
+                  <div className="mx-auto max-w-xl rounded-[32px] bg-white/95 p-8 text-center shadow-[0_20px_60px_rgba(30,94,214,0.18)] backdrop-blur">
+                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#E8F2FF]">
+                      <CheckCircle className="h-10 w-10 text-[#1E5ED6]" />
+                    </div>
 
-      <h3 className="mt-6 text-2xl font-extrabold uppercase md:text-3xl">
-        ĐĂNG KÝ THÀNH CÔNG!
-      </h3>
+                    <h3 className="mt-6 text-2xl font-extrabold uppercase md:text-3xl">
+                      ĐĂNG KÝ THÀNH CÔNG!
+                    </h3>
 
-      <p className="mt-4 text-base leading-relaxed md:text-lg">
-        Chúc mừng bạn đã đăng ký tham gia kỳ thi thử THPT môn Toán 2026.
-        <br />
-        Ban tổ chức sẽ sớm gửi thông tin chi tiết đến bạn qua email hoặc số điện thoại.
-      </p>
+                    <p className="mt-4 text-base leading-relaxed md:text-lg">
+                      Chúc mừng bạn đã đăng ký tham gia kỳ thi thử THPT môn Toán
+                      2026.
+                      <br />
+                      Ban tổ chức sẽ sớm gửi thông tin chi tiết đến bạn qua email
+                      hoặc số điện thoại.
+                    </p>
 
-      <p className="mt-4 text-base font-semibold leading-relaxed md:text-lg">
-        Đừng quên follow fanpage Facebook để cập nhật lịch thi, tài liệu ôn tập
-        và các thông báo mới nhất nhé.
-      </p>
+                    <p className="mt-4 text-base font-semibold leading-relaxed md:text-lg">
+                      Đừng quên follow fanpage Facebook để cập nhật lịch thi, tài
+                      liệu ôn tập và các thông báo mới nhất nhé.
+                    </p>
 
-      <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-        <a
-          href={FACEBOOK_PAGE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center rounded-full bg-[#1E5ED6] px-8 py-3 text-base font-bold text-white transition hover:scale-105 md:text-lg"
-        >
-          Follow fanpage Facebook
-        </a>
+                    <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                      <a
+                        href={FACEBOOK_PAGE_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center rounded-full bg-[#1E5ED6] px-8 py-3 text-base font-bold text-white transition hover:scale-105 md:text-lg"
+                      >
+                        Follow fanpage Facebook
+                      </a>
 
-        <button
-          type="button"
-          onClick={() => setSubmitted(false)}
-          className="inline-flex items-center rounded-full border-2 border-[#1E5ED6] px-8 py-3 text-base font-bold text-[#1E5ED6] transition hover:scale-105 md:text-lg"
-        >
-          Đăng ký lại
-        </button>
-      </div>
-    </div>
-  )}
-</div>
+                      <button
+                        type="button"
+                        onClick={() => setSubmitted(false)}
+                        className="inline-flex items-center rounded-full border-2 border-[#1E5ED6] px-8 py-3 text-base font-bold text-[#1E5ED6] transition hover:scale-105 md:text-lg"
+                      >
+                        Đăng ký lại
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="bg-gradient-to-b from-[#0E55D8] to-[#1D73E8] px-4 py-33">
+      <footer className="bg-gradient-to-b from-[#0E55D8] to-[#1D73E8] px-4 py-20">
         <div className="mx-auto flex max-w-7xl items-center justify-center gap-3 text-center text-white">
           <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm">
             <GraduationCap className="h-6 w-6" />
