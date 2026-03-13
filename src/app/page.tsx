@@ -33,7 +33,7 @@ type FormData = z.infer<typeof schema>;
 export default function Home() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const FACEBOOK_PAGE_URL = "https://facebook.com/ten-page-cua-ban";
+  const FACEBOOK_PAGE_URL = "https://www.facebook.com/profile.php?id=61579516583941";
 
   const {
     register,
