@@ -18,9 +18,6 @@ import {
   CheckCircle,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-
 const schema = z.object({
   fullName: z.string().min(2, "Vui lòng nhập họ và tên"),
   phone: z
@@ -36,6 +33,7 @@ type FormData = z.infer<typeof schema>;
 export default function Home() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const FACEBOOK_PAGE_URL = "https://facebook.com/ten-page-cua-ban";
 
   const {
     register,
@@ -366,85 +364,129 @@ export default function Home() {
 
               {/* RIGHT */}
               <div className="text-[#1E5ED6]">
-                <h3 className="text-center text-xl font-bold uppercase md:text-3xl">
-                  THÔNG TIN CÁ NHÂN
-                </h3>
+  {!submitted ? (
+    <>
+      <h3 className="text-center text-xl font-bold uppercase md:text-3xl">
+        THÔNG TIN CÁ NHÂN
+      </h3>
 
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="mt-6 space-y-4"
-                >
-                  <div
-                    className="absolute -left-[9999px] opacity-0"
-                    aria-hidden="true"
-                  >
-                    <input
-                      type="text"
-                      tabIndex={-1}
-                      autoComplete="off"
-                      {...register("website")}
-                    />
-                  </div>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="mt-6 space-y-4"
+      >
+        <div
+          className="absolute -left-[9999px] opacity-0"
+          aria-hidden="true"
+        >
+          <input
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            {...register("website")}
+          />
+        </div>
 
-                  <div>
-                    <label className="mb-2 block text-sm md:text-lg">
-                      Họ và tên
-                    </label>
-                    <input
-                      type="text"
-                      {...register("fullName")}
-                      className="w-full rounded-full bg-[#F4D75C] px-6 py-3 md:py-4 outline-none"
-                    />
-                    {errors.fullName && (
-                      <p className="mt-1 text-sm text-red-600">
-                        {errors.fullName.message}
-                      </p>
-                    )}
-                  </div>
+        <div>
+          <label className="mb-2 block text-sm md:text-lg">
+            Họ và tên
+          </label>
+          <input
+            type="text"
+            {...register("fullName")}
+            className="w-full rounded-full bg-[#F4D75C] px-6 py-3 md:py-4 outline-none"
+          />
+          {errors.fullName && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.fullName.message}
+            </p>
+          )}
+        </div>
 
-                  <div>
-                    <label className="mb-2 block text-sm md:text-lg">
-                      Số điện thoại
-                    </label>
-                    <input
-                      type="tel"
-                      {...register("phone")}
-                      className="w-full rounded-full bg-[#F4D75C] px-6 py-3 md:py-4 outline-none"
-                    />
-                    {errors.phone && (
-                      <p className="mt-1 text-sm text-red-600">
-                        {errors.phone.message}
-                      </p>
-                    )}
-                  </div>
+        <div>
+          <label className="mb-2 block text-sm md:text-lg">
+            Số điện thoại
+          </label>
+          <input
+            type="tel"
+            {...register("phone")}
+            className="w-full rounded-full bg-[#F4D75C] px-6 py-3 md:py-4 outline-none"
+          />
+          {errors.phone && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.phone.message}
+            </p>
+          )}
+        </div>
 
-                  <div>
-                    <label className="mb-2 block text-sm md:text-lg">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      {...register("email")}
-                      className="w-full rounded-full bg-[#F4D75C] px-6 py-3 md:py-4 outline-none"
-                    />
-                    {errors.email && (
-                      <p className="mt-1 text-sm text-red-600">
-                        {errors.email.message}
-                      </p>
-                    )}
-                  </div>
+        <div>
+          <label className="mb-2 block text-sm md:text-lg">
+            Email
+          </label>
+          <input
+            type="email"
+            {...register("email")}
+            className="w-full rounded-full bg-[#F4D75C] px-6 py-3 md:py-4 outline-none"
+          />
+          {errors.email && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.email.message}
+            </p>
+          )}
+        </div>
 
-                  <div className="flex justify-center pt-4">
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="rounded-full bg-[#F4D75C] px-8 py-3 text-lg font-bold text-[#1E5ED6] transition hover:scale-105 md:text-xl disabled:opacity-70"
-                    >
-                      {isSubmitting ? "ĐANG GỬI..." : "ĐĂNG KÝ"}
-                    </button>
-                  </div>
-                </form>
-              </div>
+        <div className="flex justify-center pt-4">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="rounded-full bg-[#F4D75C] px-8 py-3 text-lg font-bold text-[#1E5ED6] transition hover:scale-105 md:text-xl disabled:opacity-70"
+          >
+            {isSubmitting ? "ĐANG GỬI..." : "ĐĂNG KÝ"}
+          </button>
+        </div>
+      </form>
+    </>
+  ) : (
+    <div className="mx-auto max-w-xl rounded-[32px] bg-white/95 p-8 text-center shadow-[0_20px_60px_rgba(30,94,214,0.18)] backdrop-blur">
+      <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#E8F2FF]">
+        <CheckCircle className="h-10 w-10 text-[#1E5ED6]" />
+      </div>
+
+      <h3 className="mt-6 text-2xl font-extrabold uppercase md:text-3xl">
+        ĐĂNG KÝ THÀNH CÔNG!
+      </h3>
+
+      <p className="mt-4 text-base leading-relaxed md:text-lg">
+        Chúc mừng bạn đã đăng ký tham gia kỳ thi thử THPT môn Toán 2026.
+        <br />
+        Ban tổ chức sẽ sớm gửi thông tin chi tiết đến bạn qua email hoặc số điện thoại.
+      </p>
+
+      <p className="mt-4 text-base font-semibold leading-relaxed md:text-lg">
+        Đừng quên follow fanpage Facebook để cập nhật lịch thi, tài liệu ôn tập
+        và các thông báo mới nhất nhé.
+      </p>
+
+      <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a
+          href={FACEBOOK_PAGE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center rounded-full bg-[#1E5ED6] px-8 py-3 text-base font-bold text-white transition hover:scale-105 md:text-lg"
+        >
+          Follow fanpage Facebook
+        </a>
+
+        <button
+          type="button"
+          onClick={() => setSubmitted(false)}
+          className="inline-flex items-center rounded-full border-2 border-[#1E5ED6] px-8 py-3 text-base font-bold text-[#1E5ED6] transition hover:scale-105 md:text-lg"
+        >
+          Đăng ký lại
+        </button>
+      </div>
+    </div>
+  )}
+</div>
             </div>
           </div>
         </section>
