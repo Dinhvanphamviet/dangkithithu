@@ -25,7 +25,6 @@ const schema = z.object({
     .min(9, "Số điện thoại không hợp lệ")
     .regex(/^[0-9+\-\s()]+$/, "Số điện thoại không hợp lệ"),
   email: z.string().email("Email không hợp lệ"),
-  website: z.string().max(0, "Bot detected"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -47,13 +46,10 @@ export default function Home() {
       fullName: "",
       phone: "",
       email: "",
-      website: "",
     },
   });
 
   const onSubmit = async (data: FormData) => {
-    if (data.website) return;
-
     setIsSubmitting(true);
 
     try {
@@ -360,17 +356,6 @@ export default function Home() {
                     </h3>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
-                      <div
-                        className="absolute -left-[9999px] opacity-0"
-                        aria-hidden="true"
-                      >
-                        <input
-                          type="text"
-                          tabIndex={-1}
-                          autoComplete="off"
-                          {...register("website")}
-                        />
-                      </div>
 
                       <div>
                         <label className="mb-2 block text-sm md:text-lg">
@@ -379,6 +364,7 @@ export default function Home() {
                         <input
                           type="text"
                           {...register("fullName")}
+                          autoComplete="name"
                           placeholder="Nhập họ và tên"
                           className="w-full rounded-full bg-[#F4D75C] px-6 py-3 outline-none md:py-4"
                         />
@@ -396,7 +382,8 @@ export default function Home() {
                         <input
                           type="tel"
                           {...register("phone")}
-                          placeholder="Nhập chính xác số điện thoại"
+                          autoComplete="tel"
+                          placeholder="Nhập số điện thoại"
                           className="w-full rounded-full bg-[#F4D75C] px-6 py-3 outline-none md:py-4"
                         />
                         {errors.phone && (
@@ -413,6 +400,7 @@ export default function Home() {
                         <input
                           type="email"
                           {...register("email")}
+                          autoComplete="email"
                           placeholder="Nhập chính xác Email để nhận tài khoản thi"
                           className="w-full rounded-full bg-[#F4D75C] px-6 py-3 outline-none md:py-4"
                         />
