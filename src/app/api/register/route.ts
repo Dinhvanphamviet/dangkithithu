@@ -55,41 +55,41 @@ async function sendConfirmationEmail({
   await transporter.sendMail({
     from: smtpConfig.from,
     to: email,
-    subject: "ChÃºc má»«ng báº¡n Ä‘Ã£ Ä‘Äƒng kÃ½ thi thá»­ thÃ nh cÃ´ng",
+    subject: "Chúc mừng bạn đã đăng ký thi thử thành công",
     html: `
       <div style="font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #16325c; background: #f7faff; padding: 24px;">
         <div style="max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 16px; padding: 32px; border: 1px solid #dbe7ff;">
           <h2 style="margin-top: 0; color: #1656D6;">
-            ChÃºc má»«ng báº¡n Ä‘Ã£ Ä‘Äƒng kÃ½ thÃ nh cÃ´ng ðŸŽ‰
+            Chúc mừng bạn đã đăng ký thành công 🎉
           </h2>
 
-          <p>Xin chÃ o <strong>${fullName}</strong>,</p>
+          <p>Xin chào <strong>${fullName}</strong>,</p>
 
           <p>
-            Báº¡n Ä‘Ã£ Ä‘Äƒng kÃ½ tham gia ká»³ thi thá»­ THPT mÃ´n ToÃ¡n 2026 thÃ nh cÃ´ng.
+            Bạn đã đăng ký tham gia kỳ thi thử THPT môn Toán 2026 thành công.
           </p>
 
           <p>
-            Há»‡ thá»‘ng sáº½ sá»­ dá»¥ng thÃ´ng tin sau Ä‘á»ƒ Ä‘Äƒng nháº­p:
+            Hệ thống sẽ sử dụng thông tin sau để đăng nhập:
           </p>
 
           <div style="background: #F4F8FF; border-radius: 12px; padding: 16px; margin: 16px 0;">
-            <p style="margin: 0 0 8px 0;"><strong>TÃ i khoáº£n thi:</strong> ${email}</p>
-            <p style="margin: 0;"><strong>Máº­t kháº©u Ä‘Äƒng nháº­p:</strong> ${phone}</p>
+            <p style="margin: 0 0 8px 0;"><strong>Tài khoản thi:</strong> ${email}</p>
+            <p style="margin: 0;"><strong>Mật khẩu đăng nhập:</strong> ${phone}</p>
           </div>
 
           <p>
-            Vui lÃ²ng lÆ°u láº¡i thÃ´ng tin Ä‘á»ƒ sá»­ dá»¥ng khi há»‡ thá»‘ng má»Ÿ thi.
+            Vui lòng lưu lại thông tin để sử dụng khi hệ thống mở thi.
           </p>
 
           <p>
-            Háº¹n gáº·p báº¡n trong ká»³ thi thá»­ diá»…n ra vÃ o <strong>thÃ¡ng 5</strong>.
-            ChÃºc báº¡n Ã´n táº­p hiá»‡u quáº£ vÃ  Ä‘áº¡t káº¿t quáº£ tháº­t tá»‘t!
+            Hẹn gặp bạn trong kỳ thi thử diễn ra vào <strong>tháng 5</strong>.
+            Chúc bạn ôn tập hiệu quả và đạt kết quả thật tốt!
           </p>
 
           <p style="margin-top: 24px;">
-            TrÃ¢n trá»ng,<br />
-            <strong>Ban tá»• chá»©c ká»³ thi thá»­ THPT</strong>
+            Trân trọng,<br />
+            <strong>Ban tổ chức kỳ thi thử THPT</strong>
           </p>
         </div>
       </div>
@@ -104,7 +104,7 @@ export async function POST(req: Request) {
 
     if (!fullName || !phone || !email) {
       return NextResponse.json(
-        { error: "Vui lÃ²ng Ä‘iá»n Ä‘áº§y Ä‘á»§ thÃ´ng tin" },
+        { error: "Vui lòng điền đầy đủ thông tin" },
         { status: 400 }
       );
     }
@@ -114,7 +114,7 @@ export async function POST(req: Request) {
 
     if (!GOOGLE_CLIENT_EMAIL || !GOOGLE_PRIVATE_KEY || !GOOGLE_SHEET_ID) {
       return NextResponse.json(
-        { error: "Lá»—i mÃ¡y chá»§: ChÆ°a cáº¥u hÃ¬nh Google Sheets" },
+        { error: "Lỗi máy chủ: Chưa cấu hình Google Sheets" },
         { status: 500 }
       );
     }
@@ -145,7 +145,7 @@ export async function POST(req: Request) {
 
     if (duplicate) {
       return NextResponse.json(
-        { error: "Sá»‘ Ä‘iá»‡n thoáº¡i hoáº·c email Ä‘Ã£ Ä‘Äƒng kÃ½ trÆ°á»›c Ä‘Ã³" },
+        { error: "Số điện thoại hoặc email đã đăng ký trước đó" },
         { status: 400 }
       );
     }
@@ -179,7 +179,7 @@ export async function POST(req: Request) {
     console.error("Google Sheets error:", error);
 
     return NextResponse.json(
-      { error: error.message || "Lá»—i há»‡ thá»‘ng" },
+      { error: error.message || "Lỗi hệ thống" },
       { status: 500 }
     );
   }
