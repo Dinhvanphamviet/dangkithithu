@@ -75,7 +75,7 @@ export default function Home() {
     } catch (error: any) {
       toast.error(
         error?.message ||
-          "Đã xảy ra lỗi hệ thống khi đăng ký. Vui lòng liên hệ ban tổ chức."
+        "Đã xảy ra lỗi hệ thống khi đăng ký. Vui lòng liên hệ ban tổ chức."
       );
     } finally {
       setIsSubmitting(false);
@@ -423,44 +423,76 @@ export default function Home() {
                     </form>
                   </>
                 ) : (
-                  <div className="mx-auto max-w-xl rounded-[32px] bg-white/95 p-8 text-center shadow-[0_20px_60px_rgba(30,94,214,0.18)] backdrop-blur">
-                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#E8F2FF]">
+                  <div className="mx-auto max-w-2xl rounded-[32px] bg-white/95 p-6 text-center shadow-[0_20px_60px_rgba(30,94,214,0.18)] backdrop-blur md:p-10">
+                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#1E5ED6]/10">
                       <CheckCircle className="h-10 w-10 text-[#1E5ED6]" />
                     </div>
 
-                    <h3 className="mt-6 text-2xl font-extrabold uppercase md:text-3xl">
+                    <h3 className="mt-6 text-2xl font-extrabold uppercase text-[#1E5ED6] md:text-3xl">
                       ĐĂNG KÝ THÀNH CÔNG!
                     </h3>
 
-                    <p className="mt-4 text-base leading-relaxed md:text-lg">
-                      Chúc mừng bạn đã đăng ký tham gia kỳ thi thử THPT môn Toán
-                      2026.
-                      <br />
-                      Ban tổ chức sẽ sớm gửi thông tin chi tiết đến bạn qua email
-                      hoặc số điện thoại.
+                    <p className="mt-3 text-base leading-relaxed text-slate-700 md:text-lg">
+                      Chúc mừng bạn đã ghi danh thành công. Hãy tham gia ngay các kênh dưới đây để không bỏ lỡ thông báo quan trọng.
                     </p>
 
-                    <p className="mt-4 text-base font-semibold leading-relaxed md:text-lg">
-                      Đừng quên follow fanpage Facebook để cập nhật lịch thi, tài
-                      liệu ôn tập và các thông báo mới nhất nhé.
-                    </p>
+                    <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                      {/* Zalo Card */}
+                      <div className="relative flex flex-col items-center rounded-2xl border border-[#0068FF]/20 bg-[#0068FF]/[0.02] p-6 transition-all hover:border-[#0068FF]/40 hover:bg-[#0068FF]/[0.04]">
+                        <div className="mb-4 flex h-8 items-center justify-center text-[#0068FF]">
+                          <span className="text-3xl font-black tracking-tighter">Zalo</span>
+                        </div>
 
-                    <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                      <a
-                        href={FACEBOOK_PAGE_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center rounded-full bg-[#1E5ED6] px-8 py-3 text-base font-bold text-white transition hover:scale-105 md:text-lg"
-                      >
-                        Follow fanpage Facebook
-                      </a>
+                        <div className="mb-5 flex flex-1 items-center justify-center">
+                          <div className="rounded-xl border border-slate-100 bg-white p-2 shadow-sm">
+                            <img
+                              src="/qrzalo.jpg"
+                              alt="Zalo QR Code"
+                              className="h-28 w-28 rounded-lg object-cover"
+                            />
+                          </div>
+                        </div>
 
+                        <a
+                          href="https://zalo.me/g/sgtwwtsot1j3nlizuzjj"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full rounded-xl bg-[#0068FF] px-4 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#005AE0] hover:shadow-md"
+                        >
+                          Tham gia Nhóm Zalo
+                        </a>
+                      </div>
+
+                      {/* Facebook Card */}
+                      <div className="relative flex flex-col items-center rounded-2xl border border-[#1E5ED6]/20 bg-[#1E5ED6]/[0.02] p-6 transition-all hover:border-[#1E5ED6]/40 hover:bg-[#1E5ED6]/[0.04]">
+                        <div className="mb-4 flex h-8 items-center justify-center text-[#1E5ED6]">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" /></svg>
+                        </div>
+
+                        <div className="mb-5 flex flex-1 items-center justify-center text-center">
+                          <div className="rounded-xl border border-[#1E5ED6]/10 bg-white/60 p-4 text-sm font-medium leading-relaxed text-slate-700 shadow-sm">
+                            Cập nhật lịch thi, tài liệu ôn tập và các thông báo mới nhất.
+                          </div>
+                        </div>
+
+                        <a
+                          href={FACEBOOK_PAGE_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full rounded-xl bg-[#1E5ED6] px-4 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#1649B2] hover:shadow-md"
+                        >
+                          Theo dõi Fanpage
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="mt-8">
                       <button
                         type="button"
                         onClick={() => setSubmitted(false)}
-                        className="inline-flex items-center rounded-full border-2 border-[#1E5ED6] px-8 py-3 text-base font-bold text-[#1E5ED6] transition hover:scale-105 md:text-lg"
+                        className="text-sm font-medium text-slate-500 underline underline-offset-4 transition hover:text-[#1E5ED6]"
                       >
-                        Đăng ký lại
+                        Đăng ký thêm tài khoản khác
                       </button>
                     </div>
                   </div>
