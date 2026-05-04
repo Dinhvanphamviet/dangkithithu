@@ -70,19 +70,6 @@ async function sendConfirmationEmail({
           </p>
 
           <p>
-            Hệ thống sẽ sử dụng thông tin sau để đăng nhập:
-          </p>
-
-          <div style="background: #F4F8FF; border-radius: 12px; padding: 16px; margin: 16px 0;">
-            <p style="margin: 0 0 8px 0;"><strong>Tài khoản thi:</strong> ${email}</p>
-            <p style="margin: 0;"><strong>Mật khẩu đăng nhập:</strong> ${phone}</p>
-          </div>
-
-          <p>
-            Vui lòng lưu lại thông tin để sử dụng khi hệ thống mở thi.
-          </p>
-
-          <p>
             Hẹn gặp bạn trong kỳ thi thử diễn ra vào <strong>tháng 5</strong>.
             Chúc bạn ôn tập hiệu quả và đạt kết quả thật tốt!
           </p>
